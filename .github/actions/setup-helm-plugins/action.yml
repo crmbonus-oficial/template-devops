@@ -1,0 +1,39 @@
+name: setup-helm-plugins
+description: Install pinned Helm plugins (diff, secrets, s3)
+inputs:
+  helm_binary:
+    description: Path to helm binary
+    required: false
+    default: helm
+  diff_version:
+    required: false
+    default: "v3.9.7"
+  secrets_version:
+    required: false
+    default: "v4.6.0"
+  s3_version:
+    required: false
+    default: "v0.17.0"
+  uninstall_first:
+    required: false
+    default: "true"
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        HELM="${{ inputs.helm_binary }}"
+
+        if [[ "${{ inputs.uninstall_first }}" == "true" ]]; then
+          $HELM plugin remove secrets || true
+          $HELM plugin remove diff || true
+          $HELM plugin remove s3 || true
+        fi
+
+        $HELM plugin install https://github.com/databus23/helm-diff --version "${{ inputs.diff_version }}"
+        $HELM plugin install https://github.com/jkroepke/helm-secrets --version "${{ inputs.secrets_version }}"
+        $HELM plugin install https://github.com/hypnoglow/helm-s3 --version "${{ inputs.s3_version }}"
+
+        $HELM plugin list
