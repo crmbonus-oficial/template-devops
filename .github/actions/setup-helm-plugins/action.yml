@@ -37,15 +37,18 @@ runs:
         curl -sSL -o helmfile.tar.gz https://github.com/helmfile/helmfile/releases/download/v0.155.0/helmfile_0.155.0_linux_amd64.tar.gz
         mkdir -p hf && tar -xzf helmfile.tar.gz -C hf
         sudo mv hf/helmfile /usr/local/bin/helmfile
-        helmfile --version
+        sudo chmod +x /usr/local/bin/helmfile
+        export PATH="/usr/local/bin:$PATH"
+        which helmfile
+        /usr/local/bin/helmfile --version
 
     - name: Clean old Helm plugins (if any)
       shell: bash
       run: |
         set -euo pipefail
-        helm plugin remove secrets || true
-        helm plugin remove diff || true
-        helm plugin remove s3 || true
+        helm plugin remove secrets 2>/dev/null || true
+        helm plugin remove diff 2>/dev/null || true
+        helm plugin remove s3 2>/dev/null || true
 
     - shell: bash
       run: |
