@@ -21,6 +21,32 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install Helm v3.12.1
+      shell: bash
+      run: |
+        set -euo pipefail
+        curl -L https://get.helm.sh/helm-v3.12.1-linux-amd64.tar.gz -o helm.tgz
+        tar xzf helm.tgz
+        sudo mv linux-amd64/helm /usr/local/bin/helm
+        helm version
+
+    - name: Install helmfile v0.155.0
+      shell: bash
+      run: |
+        set -euo pipefail
+        curl -sSL -o helmfile.tar.gz https://github.com/helmfile/helmfile/releases/download/v0.155.0/helmfile_0.155.0_linux_amd64.tar.gz
+        mkdir -p hf && tar -xzf helmfile.tar.gz -C hf
+        sudo mv hf/helmfile /usr/local/bin/helmfile
+        helmfile --version
+
+    - name: Clean old Helm plugins (if any)
+      shell: bash
+      run: |
+        set -euo pipefail
+        helm plugin remove secrets || true
+        helm plugin remove diff || true
+        helm plugin remove s3 || true
+
     - shell: bash
       run: |
         set -euo pipefail
