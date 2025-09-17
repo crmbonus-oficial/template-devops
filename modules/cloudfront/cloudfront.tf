@@ -1,5 +1,5 @@
 resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = "OAI for ${var.project}"
+  comment = "Projeto para ${var.project}"
 }
 
 resource "aws_cloudfront_distribution" "this" {
@@ -40,7 +40,6 @@ resource "aws_cloudfront_distribution" "this" {
     max_ttl     = var.default_max_ttl
   }
 
-  # Ordered cache behaviors opcionais
   dynamic "ordered_cache_behavior" {
     for_each = var.ordered_cache_behaviors
     content {
