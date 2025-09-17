@@ -31,3 +31,18 @@ variable "oai_iam_arn" {
   type    = string
   default = null
 }
+
+variable "cache_policy_id" {
+  type    = string
+  default = null
+}
+
+variable "origin_request_policy_id" {
+  type    = string
+  default = null
+}
+
+variable "response_headers_policy_id" {
+  type    = string
+  default = null
+}

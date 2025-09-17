@@ -1,34 +1,43 @@
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket_name
+  tags   = var.tags
+}
+
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.this.id
   acl    = "private"
+}
 
-  tags = merge(var.tags, {
-    Name = var.bucket_name
-  })
+resource "aws_s3_bucket_website_configuration" "this" {
+  count = var.enable_website ? 1 : 0
 
-  dynamic "website" {
-    for_each = var.enable_website ? [1] : []
-    content {
-      index_document = var.index_document
-      error_document = var.error_document
-    }
+  bucket = aws_s3_bucket.this.id
+
+  index_document {
+    suffix = var.index_document
+  }
+
+  error_document {
+    key = var.error_document
   }
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  count  = var.attach_bucket_policy ? 1 : 0
+  count = var.attach_bucket_policy ? 1 : 0
+
   bucket = aws_s3_bucket.this.id
-  policy = data.aws_iam_policy_document.s3_policy.json
-}
 
-data "aws_iam_policy_document" "s3_policy" {
-  statement {
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.this.arn}/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [var.oai_iam_arn]
-    }
-  }
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          AWS = var.oai_iam_arn
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.this.arn}/*"
+      }
+    ]
+  })
 }
