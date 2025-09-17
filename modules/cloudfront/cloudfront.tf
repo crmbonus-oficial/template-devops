@@ -1,3 +1,7 @@
+resource "aws_cloudfront_origin_access_identity" "this" {
+  comment = "OAI for ${var.project}"
+}
+
 resource "aws_cloudfront_distribution" "this" {
   enabled         = true
   is_ipv6_enabled = true
@@ -19,52 +23,29 @@ resource "aws_cloudfront_distribution" "this" {
     target_origin_id       = var.origin_id
     viewer_protocol_policy = var.viewer_protocol_policy
 
-    allowed_methods  = var.allowed_methods
-    cached_methods   = var.cached_methods
+    allowed_methods = var.allowed_methods
+    cached_methods  = var.cached_methods
 
-    dynamic "cache_policy_id" {
-      for_each = var.cache_policy_id != null ? [1] : []
-      content  = var.cache_policy_id
-    }
+    # Políticas opcionais
+    cache_policy_id            = var.cache_policy_id != null ? var.cache_policy_id : null
+    origin_request_policy_id   = var.origin_request_policy_id != null ? var.origin_request_policy_id : null
+    response_headers_policy_id = var.response_headers_policy_id != null ? var.response_headers_policy_id : null
+  }
 
-    dynamic "origin_request_policy_id" {
-      for_each = var.origin_request_policy_id != null ? [1] : []
-      content  = var.origin_request_policy_id
-    }
-
-    dynamic "response_headers_policy_id" {
-      for_each = var.response_headers_policy_id != null ? [1] : []
-      content  = var.response_headers_policy_id
+  restrictions {
+    geo_restriction {
+      restriction_type = var.restriction_type
+      locations        = var.geo_locations
     }
   }
 
-  dynamic "restrictions" {
-    for_each = var.restriction_type != "none" ? [1] : []
-    content {
-      geo_restriction {
-        restriction_type = var.restriction_type
-        locations        = var.geo_locations
-      }
-    }
+  viewer_certificate {
+    acm_certificate_arn = var.certificate_arn != null ? var.certificate_arn : null
+    ssl_support_method  = var.certificate_arn != null ? "sni-only" : null
+    cloudfront_default_certificate = var.certificate_arn == null
   }
 
-  dynamic "viewer_certificate" {
-    for_each = var.certificate_arn != null ? [1] : []
-    content {
-      acm_certificate_arn = var.certificate_arn
-      ssl_support_method  = "sni-only"
-    }
-  }
-
-  # WAF opcional
-  dynamic "web_acl_id" {
-    for_each = var.web_acl_id != null ? [1] : []
-    content  = var.web_acl_id
-  }
+  web_acl_id = var.web_acl_id != null ? var.web_acl_id : null
 
   tags = var.tags
-}
-
-resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = "OAI for ${var.project}"
 }

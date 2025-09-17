@@ -9,8 +9,7 @@ resource "aws_s3_bucket_acl" "this" {
 }
 
 resource "aws_s3_bucket_website_configuration" "this" {
-  count = var.enable_website ? 1 : 0
-
+  count  = var.enable_website ? 1 : 0
   bucket = aws_s3_bucket.this.id
 
   index_document {
@@ -23,20 +22,19 @@ resource "aws_s3_bucket_website_configuration" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  count = var.attach_bucket_policy ? 1 : 0
-
+  count  = var.attach_bucket_policy && var.oai_iam_arn != null ? 1 : 0
   bucket = aws_s3_bucket.this.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
+        Effect = "Allow"
         Principal = {
           AWS = var.oai_iam_arn
         }
-        Action   = "s3:GetObject"
-        Resource = "${aws_s3_bucket.this.arn}/*"
+        Action   = ["s3:GetObject"]
+        Resource = ["${aws_s3_bucket.this.arn}/*"]
       }
     ]
   })
