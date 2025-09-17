@@ -4,6 +4,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_bucket_acl" "this" {
+  count  = var.attach_bucket_policy ? 1 : 0
   bucket = aws_s3_bucket.this.id
   acl    = "private"
 }
@@ -22,7 +23,7 @@ resource "aws_s3_bucket_website_configuration" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  count  = var.attach_bucket_policy && var.oai_iam_arn != null ? 1 : 0
+  count  = var.oai_iam_arn != null ? 1 : 0
   bucket = aws_s3_bucket.this.id
 
   policy = jsonencode({
@@ -39,3 +40,4 @@ resource "aws_s3_bucket_policy" "this" {
     ]
   })
 }
+
