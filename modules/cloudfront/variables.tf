@@ -91,6 +91,23 @@ variable "geo_locations" {
   description = "Lista de códigos de países (ISO 3166-1 alpha-2) permitidos ou bloqueados."
 }
 
+variable "default_root_object" {
+  type        = string
+  default     = null
+  description = "Objeto raiz padrão para a distribuição CloudFront (ex: index.html). Se null, não será configurado."
+}
+
+variable "custom_error_response" {
+  type = list(object({
+    error_code            = number
+    response_code         = number
+    response_page_path    = string
+    error_caching_min_ttl = number
+  }))
+  default     = []
+  description = "Configurações de resposta de erro customizada para a distribuição CloudFront. Se vazio, não será configurado."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

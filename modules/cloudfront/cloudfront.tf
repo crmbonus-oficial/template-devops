@@ -8,6 +8,9 @@ resource "aws_cloudfront_distribution" "this" {
   comment         = var.comment
   price_class     = var.price_class
 
+  # Aplicar default_root_object apenas se fornecido
+  default_root_object = var.default_root_object
+
   aliases = var.aliases
 
   origin {
@@ -46,6 +49,17 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   web_acl_id = var.web_acl_id != null ? var.web_acl_id : null
+
+  # Aplicar custom_error_response apenas se fornecido
+  dynamic "custom_error_response" {
+    for_each = length(var.custom_error_response) > 0 ? var.custom_error_response : []
+    content {
+      error_code            = custom_error_response.value.error_code
+      response_code         = custom_error_response.value.response_code
+      response_page_path    = custom_error_response.value.response_page_path
+      error_caching_min_ttl = custom_error_response.value.error_caching_min_ttl
+    }
+  }
 
   tags = var.tags
 }
