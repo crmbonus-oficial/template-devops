@@ -60,8 +60,19 @@ variable "skip_final_snapshot" {
   default     = true
 }
 
+variable "username" {
+  description = "Usuário master (fornecido via tfvars)"
+  type        = string
+}
+
+variable "password" {
+  description = "Senha master (fornecida via tfvars)"
+  type        = string
+  sensitive   = true
+}
+
 variable "tags" {
-  description = "Tags aplicadas ao RDS e ao Secret"
+  description = "Tags aplicadas ao RDS"
   type        = map(string)
   default     = {}
 }
