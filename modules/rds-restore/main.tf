@@ -47,6 +47,20 @@ resource "aws_db_instance" "restore" {
   skip_final_snapshot      = var.skip_final_snapshot
   delete_automated_backups = true
 
+  lifecycle {
+  prevent_destroy = true
+  ignore_changes = [
+    storage_encrypted,
+    kms_key_id,
+    snapshot_identifier,
+    engine_version,
+    availability_zone,
+    performance_insights_kms_key_id,
+    master_user_secret_kms_key_id
+  ]
+}
+
+
   tags = var.tags
 }
 
