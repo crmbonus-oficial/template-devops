@@ -14,14 +14,20 @@ variable "instance_class" {
   default     = "db.m5.large"
 }
 
-variable "db_subnet_group_name" {
-  description = "Nome do subnet group do RDS"
+variable "vpc_id" {
+  description = "ID da VPC onde o banco será restaurado"
   type        = string
 }
 
-variable "vpc_security_group_ids" {
-  description = "Lista de SGs a associar"
+variable "subnet_ids" {
+  description = "Lista de subnets privadas para o Subnet Group"
   type        = list(string)
+}
+
+variable "allowed_cidrs" {
+  description = "CIDRs permitidos para conexão ao banco (porta 5432)"
+  type        = list(string)
+  default     = []
 }
 
 variable "availability_zone" {
@@ -43,7 +49,7 @@ variable "storage_type" {
 }
 
 variable "allocated_storage" {
-  description = "Tamanho em GB (usado se não vier do snapshot)"
+  description = "Tamanho do armazenamento em GB"
   type        = number
   default     = 100
 }
@@ -61,18 +67,18 @@ variable "skip_final_snapshot" {
 }
 
 variable "username" {
-  description = "Usuário master (fornecido via tfvars)"
+  description = "Usuário master do banco restaurado (mesmo da origem)"
   type        = string
 }
 
 variable "password" {
-  description = "Senha master (fornecida via tfvars)"
+  description = "Senha master do banco restaurado (mesma da origem)"
   type        = string
   sensitive   = true
 }
 
 variable "tags" {
-  description = "Tags aplicadas ao RDS"
+  description = "Tags aplicadas ao RDS, SG e Subnet Group"
   type        = map(string)
   default     = {}
 }
