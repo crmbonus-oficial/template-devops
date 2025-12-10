@@ -9,7 +9,7 @@ resource "aws_rds_cluster" "this" {
   preferred_maintenance_window = var.preferred_maintenance_window
   db_subnet_group_name    = aws_db_subnet_group.this.name
   vpc_security_group_ids  = [aws_security_group.this.id]
-
+  skip_final_snapshot = true
   scaling_configuration {
     min_capacity = var.min_capacity
     max_capacity = var.max_capacity
