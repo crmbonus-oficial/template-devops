@@ -16,13 +16,13 @@ variable "subnet_ids" {
 variable "min_capacity" {
   description = "Capacidade mínima do Aurora Serverless v2"
   type        = number
-
+  default = 1
 }
 
 variable "max_capacity" {
   description = "Capacidade máxima do Aurora Serverless v2"
   type        = number
-
+default = 3
 }
 
 variable "engine" {
