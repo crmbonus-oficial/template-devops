@@ -92,3 +92,15 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "skip_final_snapshot" {
+  description = "Define se o snapshot final deve ser pulado ao destruir o cluster"
+  type        = bool
+  default     = true
+}
+
+variable "final_snapshot_identifier" {
+  description = "Nome do snapshot final caso skip_final_snapshot seja false"
+  type        = string
+  default     = null
+}
