@@ -13,9 +13,15 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "instance_class" {
-  description = "Tipo de instância para os nós Aurora"
-  type        = string
+variable "min_capacity" {
+  description = "Capacidade mínima do Aurora Serverless v2"
+  type        = number
+
+}
+
+variable "max_capacity" {
+  description = "Capacidade máxima do Aurora Serverless v2"
+  type        = number
 
 }
 
@@ -39,12 +45,6 @@ variable "master_password" {
   description = "Senha master do Aurora"
   type        = string
   sensitive   = true
-}
-
-variable "instance_count" {
-  description = "Número de instâncias no cluster Aurora"
-  type        = number
-  default     = 2
 }
 
 variable "backup_retention_period" {

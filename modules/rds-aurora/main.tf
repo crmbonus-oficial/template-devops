@@ -10,48 +10,10 @@ resource "aws_rds_cluster" "this" {
   db_subnet_group_name    = aws_db_subnet_group.this.name
   vpc_security_group_ids  = [aws_security_group.this.id]
 
-  tags = var.tags
-}
-
-resource "aws_rds_cluster_instance" "this" {
-  count              = var.instance_count
-  identifier         = "${var.aurora_cluster_name}-${count.index}"
-  cluster_identifier = aws_rds_cluster.this.id
-  instance_class     = var.instance_class
-  engine             = var.engine
-  publicly_accessible = false
-  db_subnet_group_name = aws_db_subnet_group.this.name
-
-  tags = var.tags
-}
-
-resource "aws_db_subnet_group" "this" {
-  name       = "${var.aurora_cluster_name}-subnet-group"
-  subnet_ids = var.subnet_ids
-  tags       = var.tags
-}
-
-resource "aws_security_group" "this" {
-  name        = "${var.aurora_cluster_name}-sg"
-  description = "Aurora SG"
-  vpc_id      = var.vpc_id
-
-  dynamic "ingress" {
-    for_each = var.allowed_cidr_blocks
-    content {
-      description = ingress.value.description
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      cidr_blocks = [ingress.value.cidr_blocks]
-    }
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = [var.vpc_cidr]
+  scaling_configuration {
+    min_capacity = var.min_capacity
+    max_capacity = var.max_capacity
+    auto_pause   = false
   }
 
   tags = var.tags
