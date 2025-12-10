@@ -1,3 +1,35 @@
+resource "aws_db_subnet_group" "this" {
+  name       = "${var.aurora_cluster_name}-subnet-group"
+  subnet_ids = var.subnet_ids
+  tags       = var.tags
+}
+
+resource "aws_security_group" "this" {
+  name        = "${var.aurora_cluster_name}-sg"
+  description = "Aurora SG"
+  vpc_id      = var.vpc_id
+
+  dynamic "ingress" {
+    for_each = var.allowed_cidr_blocks
+    content {
+      description = ingress.value.description
+      from_port   = 3306
+      to_port     = 3306
+      protocol    = "tcp"
+      cidr_blocks = [ingress.value.cidr_blocks]
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  tags = var.tags
+}
+
 resource "aws_rds_cluster" "this" {
   cluster_identifier      = var.aurora_cluster_name
   engine                  = var.engine
