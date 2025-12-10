@@ -17,3 +17,7 @@ output "aurora_security_group_id" {
 output "aurora_subnet_group_name" {
   value = aws_db_subnet_group.this.name
 }
+
+output "aurora_instance_ids" {
+  value = aws_rds_cluster_instance.this[*].id
+}

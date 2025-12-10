@@ -42,14 +42,25 @@ resource "aws_rds_cluster" "this" {
   db_subnet_group_name    = aws_db_subnet_group.this.name
   vpc_security_group_ids  = [aws_security_group.this.id]
 
-  scaling_configuration {
+  # Aurora Serverless v2
+  serverlessv2_scaling_configuration {
     min_capacity = var.min_capacity
     max_capacity = var.max_capacity
-    auto_pause   = false
   }
 
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.final_snapshot_identifier
 
   tags = var.tags
+}
+
+# Pelo menos uma instância serverless v2
+resource "aws_rds_cluster_instance" "this" {
+  count              = 1
+  identifier         = "${var.aurora_cluster_name}-instance-${count.index}"
+  cluster_identifier = aws_rds_cluster.this.id
+  instance_class     = "db.serverless"
+  engine             = var.engine
+  publicly_accessible = false
+  tags               = var.tags
 }
