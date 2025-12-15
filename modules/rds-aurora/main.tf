@@ -1,14 +1,3 @@
-resource "aws_secretsmanager_secret" "aurora_password" {
-  name        = "${var.aurora_cluster_name}-master-password"
-  description = "Senha master do cluster Aurora"
-}
-
-resource "aws_secretsmanager_secret_version" "aurora_password_version" {
-  secret_id     = aws_secretsmanager_secret.aurora_password.id
-  secret_string = var.master_password
-}
-
-
 resource "aws_db_subnet_group" "this" {
   name       = "${var.aurora_cluster_name}-subnet-group"
   subnet_ids = var.subnet_ids

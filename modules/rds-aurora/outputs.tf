@@ -22,6 +22,3 @@ output "aurora_instance_ids" {
   value = aws_rds_cluster_instance.this[*].id
 }
 
-output "aurora_secret_name" {
-  value = var.aurora_secret_name
-}

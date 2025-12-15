@@ -94,7 +94,3 @@ variable "final_snapshot_identifier" {
   type        = string
   default     = null
 }
-variable "aurora_secret_name" {
-  description = "Nome do secret no AWS Secrets Manager que guarda a senha do Aurora"
-  type        = string
-}
