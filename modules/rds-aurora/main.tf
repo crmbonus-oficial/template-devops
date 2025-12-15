@@ -1,3 +1,10 @@
+data "aws_secretsmanager_secret" "aurora_password" {
+  name = var.aurora_secret_name
+}
+data "aws_secretsmanager_secret_version" "aurora_password_version" {
+  secret_id = data.aws_secretsmanager_secret.aurora_password.id
+}
+
 resource "aws_db_subnet_group" "this" {
   name       = "${var.aurora_cluster_name}-subnet-group"
   subnet_ids = var.subnet_ids
