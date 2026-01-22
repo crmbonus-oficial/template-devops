@@ -9,6 +9,22 @@ variable "engine" {
   default     = "postgres"
 }
 
+variable "vpc_id" {
+  description = "ID da VPC onde o banco será restaurado"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "Lista de subnets privadas para o Subnet Group"
+  type        = list(string)
+}
+
+variable "allowed_cidrs" {
+  description = "CIDRs permitidos para conexão ao banco (porta 5432)"
+  type        = list(string)
+  default     = []
+}
+
 variable "engine_version" {
   description = "Versão do engine"
   type        = string
@@ -61,16 +77,6 @@ variable "backup_retention_period" {
   description = "Número de dias de retenção do backup"
   type        = number
   default     = 7
-}
-
-variable "db_subnet_group_name" {
-  description = "Nome do subnet group do RDS"
-  type        = string
-}
-
-variable "vpc_security_group_ids" {
-  description = "Lista de SGs a associar"
-  type        = list(string)
 }
 
 variable "tags" {
