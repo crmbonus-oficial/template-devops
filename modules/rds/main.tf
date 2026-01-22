@@ -64,6 +64,8 @@ resource "aws_db_instance" "this" {
   storage_type        = var.storage_type
   multi_az            = var.multi_az
   publicly_accessible = var.publicly_accessible
+  parameter_group_name = aws_db_parameter_group.this.name
+
 
   deletion_protection = var.deletion_protection
   skip_final_snapshot = var.skip_final_snapshot
@@ -84,6 +86,19 @@ resource "aws_db_instance" "this" {
     aws_security_group.this
   ]
 }
+
+resource "aws_db_parameter_group" "this" {
+  name        = "${var.db_identifier}-pg"
+  family      = var.parameter_group_family
+  description = "Default-like custom parameter group for ${var.db_identifier}"
+  tags        = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 
 output "rds_endpoint" {
   value = aws_db_instance.this.endpoint

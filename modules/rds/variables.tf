@@ -84,3 +84,10 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "parameter_group_family" {
+  description = "Family do parameter group (ex: postgres17)"
+  type        = string
+}
+
+
