@@ -32,7 +32,7 @@ resource "aws_cloudfront_distribution" "this" {
     response_headers_policy_id = var.response_headers_policy_id != null ? var.response_headers_policy_id : null
   }
 
-  # Adicionando comportamentos customizados de cache (caso existam)
+  # Adicionando comportamentos customizados de cache 
   dynamic "cache_behavior" {
     for_each = var.custom_cache_behaviors
     content {
