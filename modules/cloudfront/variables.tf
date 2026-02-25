@@ -96,3 +96,18 @@ variable "tags" {
   default     = {}
   description = "Tags aplicadas ao recurso CloudFront."
 }
+variable "custom_cache_behaviors" {
+  type = list(object({
+    path_pattern               = string
+    target_origin_id           = string
+    viewer_protocol_policy     = string
+    allowed_methods            = list(string)
+    cached_methods             = list(string)
+    cache_policy_id            = string
+    origin_request_policy_id   = string
+    response_headers_policy_id = string
+  }))
+  description = "Lista de comportamentos de cache personalizados para o CloudFront."
+  default     = []
+}
+
