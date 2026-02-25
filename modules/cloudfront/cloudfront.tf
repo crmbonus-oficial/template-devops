@@ -32,6 +32,21 @@ resource "aws_cloudfront_distribution" "this" {
     response_headers_policy_id = var.response_headers_policy_id != null ? var.response_headers_policy_id : null
   }
 
+  # Adicionando comportamentos customizados 
+  dynamic "ordered_cache_behaviors" {
+    for_each = var.custom_cache_behaviors
+    content {
+      path_pattern               = ordered_cache_behaviors.value.path_pattern
+      target_origin_id           = ordered_cache_behaviors.value.target_origin_id
+      viewer_protocol_policy     = ordered_cache_behaviors.value.viewer_protocol_policy
+      allowed_methods            = ordered_cache_behaviors.value.allowed_methods
+      cached_methods             = ordered_cache_behaviors.value.cached_methods
+      cache_policy_id            = ordered_cache_behaviors.value.cache_policy_id
+      origin_request_policy_id   = ordered_cache_behaviors.value.origin_request_policy_id
+      response_headers_policy_id = ordered_cache_behaviors.value.response_headers_policy_id
+    }
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = var.restriction_type
