@@ -33,17 +33,17 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   # Adicionando comportamentos personalizados de cache
-  dynamic "cache_behavior" {
+  cache_behaviors {
     for_each = var.custom_cache_behaviors
     content {
-      path_pattern               = cache_behavior.value.path_pattern
-      target_origin_id           = cache_behavior.value.target_origin_id
-      viewer_protocol_policy     = cache_behavior.value.viewer_protocol_policy
-      allowed_methods            = cache_behavior.value.allowed_methods
-      cached_methods             = cache_behavior.value.cached_methods
-      cache_policy_id            = cache_behavior.value.cache_policy_id
-      origin_request_policy_id   = cache_behavior.value.origin_request_policy_id
-      response_headers_policy_id = cache_behavior.value.response_headers_policy_id
+      path_pattern               = cache_behaviors.value.path_pattern
+      target_origin_id           = cache_behaviors.value.target_origin_id
+      viewer_protocol_policy     = cache_behaviors.value.viewer_protocol_policy
+      allowed_methods            = cache_behaviors.value.allowed_methods
+      cached_methods             = cache_behaviors.value.cached_methods
+      cache_policy_id            = cache_behaviors.value.cache_policy_id
+      origin_request_policy_id   = cache_behaviors.value.origin_request_policy_id
+      response_headers_policy_id = cache_behaviors.value.response_headers_policy_id
     }
   }
 
