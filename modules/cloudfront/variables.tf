@@ -97,7 +97,7 @@ variable "tags" {
   description = "Tags aplicadas ao recurso CloudFront."
 }
 variable "custom_cache_behaviors" {
-  type = list(object({
+  type        = list(object({
     path_pattern               = string
     target_origin_id           = string
     viewer_protocol_policy     = string
@@ -107,7 +107,7 @@ variable "custom_cache_behaviors" {
     origin_request_policy_id   = string
     response_headers_policy_id = string
   }))
-  description = "Lista de comportamentos de cache personalizados para o CloudFront."
   default     = []
+  description = "Comportamentos personalizados de cache"
 }
 
